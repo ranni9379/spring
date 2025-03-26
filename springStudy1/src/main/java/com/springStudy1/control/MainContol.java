@@ -1,8 +1,10 @@
 package com.springStudy1.control;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springStudy1.DTO.School;
+
+import javax.sql.DataSource;
 import com.springStudy1.DTO.User;
+import com.springStudy1.config.AppConfig;
 import com.springStudy1.service.SchoolService;
 import com.springStudy1.service.UserService;
 
@@ -19,13 +24,17 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MainContol {
+
+
 	
 	@Autowired
 	private SchoolService schoolService;
 	
 	@Autowired
 	private UserService userService;
-	
+
+
+
 	
 	@GetMapping("/test") //localhost/test
 	public  String testPage() {
@@ -67,11 +76,45 @@ public class MainContol {
 	
 	
 	// 정보수정 화면
-	@GetMapping("userUpdate")
-	public String memberUpdate() {
-		return "memberModify";
+	@GetMapping("/userUpdate")
+	public ModelAndView memberUpdate(HttpSession session) {
+		ModelAndView mav = new ModelAndView("memberModify");		
+		
+		// 현재 로그인한 회원의 정보를 가져와서 페이지에 출력하기
+		
+		String id= (String)session.getAttribute("user"); // 로그인한 아이디
+		User info = userService.userDetail(id);
+		mav.addObject("info",info); // 회원정보 모델엔뷰에 저장해야 뷰에 출력
+		
+		return mav;
+		
+	}
+	@PostMapping("/userUpdate")
+	public String userUpdate (@RequestParam Map<String,String> param){
+		//input태그의 name이  key, input태그에 작성한 내용이 value
+		//map에 각각 저장된다.
+		
+	
+
+		
+
+		
+		
+		System.out.println(param.get("id"));
+		userService.update(param);
+	
+		return "index";
+		
 	}
 	
+	
+	
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.removeAttribute("user");
+		return "index";
+	}
 	
 	
 	

@@ -1,7 +1,11 @@
 package com.springStudy1.DAO;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.springStudy1.DTO.User;
@@ -47,6 +51,35 @@ public class UserDao {
 			}
 			
 			return true; //로그인 성공처리하기
+		}
+
+		public User findById(String id) {
+			
+			String sql = "select * from user where user_id=?";
+			
+			User user = jdbc.queryForObject(sql, 
+					new RowMapper<User>(){
+				@Override
+				public User mapRow(ResultSet rs, int rowNum) throws SQLException{
+					User user = new User();
+					user.setUserId(rs.getString("user_id"));
+					user.setUserEmail(rs.getString("user_email"));
+					user.setUserAddr(rs.getString("user_addr"));
+					user.setUserJob(rs.getString("user_job"));
+					user.setUserLike(rs.getString("user_like"));
+					
+					return user;
+				}
+			}, id);
+			return user;
+		}
+
+		public void update(User user) {
+			String sql = "update user set user_pw=? , user_email=?, user_addr=?, "+"user_job=?, user_like=? where user_id=?";
+			
+			jdbc.update(sql, user.getUserPw(), user.getUserEmail(), user.getUserAddr(), 
+					user.getUserJob(), user.getUserLike(), user.getUserId());
+			
 		}
 	
 	}

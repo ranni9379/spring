@@ -1,0 +1,58 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Single+Day&display=swap');
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+ul{
+	list-style-type:none;
+}
+
+a{
+	text-decoration: none;
+	color:inherit;
+}
+
+input{
+	outline: none;
+	padding: 5px 10px;
+}
+
+
+#wrap{
+	width:1000px;
+	margin: 0 auto;
+}
+
+#header{
+	width:100%;
+	position:sticky;
+	padding: 15px 0;
+	top:0;
+	background: #fff;
+}
+
+#menulist{
+	width:100%;
+	display: flex;
+	align-items: center;
+}
+
+#menulist .menu{
+	width:20%;
+	text-align: center;
+}
+
+#menulist .menu a{
+	display:block;
+	width:80%; padding:10px 0;
+	margin: 0 10%;
+}
+
+#menulist .menu a:hover{
+	background:#3cb371;
+	color: #eee;
+}
+

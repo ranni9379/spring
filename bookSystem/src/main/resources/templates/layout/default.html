@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.tymeleaf.org"
+		xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>온라인 도서관</title>
+
+<link rel="stylesheet" href="./css/default.css">
+
+<th:block layout:fragment="css">
+
+
+
+</th:block>
+<th:block layout:fragment="script"></th:block>
+
+
+
+</head>
+<body>
+
+ <div id="wrap">
+  	<th:block th:replace="layout/header :: head"></th:block>
+  	
+  	<th:block layout:fragment="main"></th:block>
+  	
+  	<th:block th:replace="layout/footer :: foot"></th:block>
+  	
+ </div>
+
+ 
+
+</body>
+</html>
+
+<!--  
+
+thmeleaf에서 jsp include와 같은 방법
+
+th:replace => 해당 태그를 대체하는것 , th:include => 태그 안으로 삽입하는것
+  
+ <div th:replace="{~aa.html}"></div>
+ 하면 <div>태그는 사라지고 그 자리에 aa.html내용으로 대체된다.
+
+
+<div th:include="{~bb.html}"></div>하면 div태그안에 bb.html이 삽입된다.
+
+
+
+ -->
