@@ -8,10 +8,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.bookSystem.DTO.BookBasketDto;
+import com.bookSystem.DTO.BookListDto;
+import com.bookSystem.DTO.BookLoanDto;
+import com.bookSystem.DTO.BookSearchDto;
 import com.bookSystem.DTO.MemberDto;
+import com.bookSystem.Entity.BookUse;
 import com.bookSystem.Service.BookService;
 import com.bookSystem.Service.MemberService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MainController {
@@ -31,7 +39,7 @@ public class MainController {
 	}
 	
 	@PostMapping("/signIn")
-	public String login(MemberDto memberDto, Model model) {
+	public String login(MemberDto memberDto, HttpSession session, Model model) {
 		System.out.println(memberDto.getEmail());
 		
 		//로그인처리를 진행하려면 service의 메서드를 호출한다.
@@ -39,11 +47,14 @@ public class MainController {
 		//컨트롤 쪽에서는 로그인처리과정이 어떻게 진행되고 하는지 전혀몰라도 된다.
 		//그냥 service쪽 메서드를 호출하면 된다.
 		
+	// 로그인 성공시,	
 	boolean isSuccess = memberService.signIn(memberDto);
 	
 	
 	if(isSuccess) {
-		return "redirect/";
+		session.setAttribute("user", memberDto.getEmail());
+		
+		return "redirect:/";
 	}
 	
 	
@@ -52,9 +63,83 @@ public class MainController {
 		return "index";
 	}
 	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		
+		session.removeAttribute("user");
+		return "redirect:/";
+	}
+	// 도서 검색부분
+	
+	@GetMapping("/bookSearch")
+	public String search(Model model) { //도서검색 페이지 요청
+		
+		model.addAttribute("bookSearchDto", new BookSearchDto());
+		
+		return "book/search";
+	}
+	@GetMapping("/bookSearch/result")
+	public String searchResult(BookSearchDto bookSearchDto, Model model) {
+		
+		List<BookListDto> bookListDtos= bookService.bookSearch(bookSearchDto);
+		
+		model.addAttribute("bookListDtos", bookListDtos);
+		
+		return "book/search";
+	}
+	
+	// 도서 검색부분 끝
 	
 	
 	
+	// 도서 제목 클릭하여 바구니에 넣기 요청 처리
+	@GetMapping("/basket")
+	public String basket(@RequestParam int bookId, HttpSession session) {
+		String email= (String)session.getAttribute("user");
+		
+		bookService.myBasketSave(bookId, email);
+		
+		return "redirect:/bookSearch";
+	}
+	
+	//대출페이지 요청처리
+	@GetMapping("/loans")
+	public String loansPage(Model model, HttpSession session) {
+		String email = (String)session.getAttribute("user");
+		List<BookBasketDto> basketList= bookService.myBasketList(email);
+		
+		model.addAttribute("basketList", basketList);
+		return "book/loan";
+	}
+	
+	//대출 저장 및 찜 목록에서 삭제
+	@GetMapping("/loanSave")
+	public String loanSave(@RequestParam("id") int id, 
+			@RequestParam("bookId") int bookId, HttpSession session) {
+		String email = (String)session.getAttribute("user");
+		bookService.loanSave(id,bookId, email);
+		
+		return "redirect:/loans";
+	}	
+	
+	@GetMapping("/return")
+	public String returnPage(Model model , HttpSession session) {
+		String email = (String)session.getAttribute("user");
+		
+		List<BookLoanDto> list = bookService.myLoanList( email );
+		
+		model.addAttribute("loanList",list);
+		return "book/return";
+	}
+	
+	
+	@GetMapping("/returnExecute")
+	public String returnExe(@RequestParam int id) {
+		
+		bookService.returnEx(id);
+		
+		return "redirect:/return";
+	}
 	
 	
 	
