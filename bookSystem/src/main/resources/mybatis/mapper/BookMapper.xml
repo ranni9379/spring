@@ -59,6 +59,7 @@
 		select *
 		from book_use
 		where member_id=#{memberId}	
+		and status ='대출'
 	</select>
 		
 	<update id="returnExecuteDB" parameterType="int">
