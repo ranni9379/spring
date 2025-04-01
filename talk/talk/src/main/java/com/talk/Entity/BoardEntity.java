@@ -2,6 +2,8 @@ package com.talk.Entity;
 
 import java.time.LocalDate;
 
+
+import com.talk.DTO.BoardDetailDto;
 import com.talk.DTO.BoardDto;
 
 import lombok.Getter;
@@ -18,13 +20,6 @@ private String fileName;
 private int hit;
 private LocalDate writeDate;
 
-public static BoardEntity from(BoardDto boardDto) {
-	BoardEntity boardEntity = new BoardEntity();
-	
-	return boardEntity;
-}
-	
-	
 	
 	
 }
