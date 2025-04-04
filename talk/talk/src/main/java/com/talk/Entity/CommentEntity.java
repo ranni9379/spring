@@ -19,6 +19,10 @@ public class CommentEntity {
 public static CommentEntity from(CommentDto commentDto) {
 	CommentEntity commentEntity = new CommentEntity();
 	
+	commentEntity.setBoardId( commentDto.getBoardId() );
+	commentEntity.setContent( commentDto.getContent() );
+	commentEntity.setMemberId( commentDto.getMemberId() );
+	
 	return commentEntity;
 }
 
